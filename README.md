@@ -7,3 +7,9 @@
 <a href="https://www.djangoproject.com/"><b>Django framework</b></a><br>
 <a href="https://www.sqlite.org/"><b>SQLite database</b></a>
 ## Использование:
+<br>
+Предварительно на компьютере должен быть установлен Python. Программа свободно распространяемая. Официальный сайт - <a href="https://www.python.org/">python.org</a><br>
+Необходимые для работы программы библиотеки указаны в файле requirements.txt<br>
+Все их можно установить с помощью команды <b>pip install -r requirements.txt</b><br>
+Далее следует войти в каталог shop и запустить web-сервер командой <b>python manage.py runserver</b><br>
+Перейдите по появившейся ссылке <i>http://127.0.0.1:8000/</i>
