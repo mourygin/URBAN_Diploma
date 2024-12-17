@@ -1,0 +1,15 @@
+{% extends 'struct.html' %}
+{% load static %}
+
+{% block pagename %}
+    <h1>{{ current_user_name }}, извините нас пожалуйста, но у нас закончились все подарки!</h1>
+{% endblock %}
+{% block menu %}
+{{ block.super }}
+{% endblock %}
+{% block main %}
+	<h1>{{ current_user_name }}, извините нас пожалуйста, но у нас закончились все подарки!</h1>
+{% endblock %}
+{% block footer %}
+{{ block.super }}
+{% endblock %}

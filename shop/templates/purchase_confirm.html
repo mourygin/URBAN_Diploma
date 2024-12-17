@@ -1,0 +1,54 @@
+{% extends 'struct.html' %}
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+	<link rel = 'stylesheet' href = '{% static "style.css" %}'>
+</head>
+{% block pagename %}
+	<h1>{{ current_user_name }}, {{ toy_title }} - это {{ good_word }} выбор!</h1>
+{% endblock %}
+{% block menu %}
+{{ block.super }}
+{% endblock %}
+{% block main %}
+	<table border="1" align="center" width="1080">
+		<tr align="center">
+            <td>
+                <table border="0" align="center" width="1080">
+                    <tr>
+                        <td width="350" rowspan="3" align="center">
+                            <img src = "/static/{{ toy_pic_fn }}"  width="300" height="300"/>
+                        </td>
+                        <td>
+                            <h2><u>Подтвердите Ваше решение купить "{{ toy_title }}".</u></h2>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Цена игрушки - {{ toy_cost }}; Ваш баланс - {{ balance }}.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {% if balance > toy_cost %}
+                            <form method="post" action="http://127.0.0.1:8000/buy/">
+                                {% csrf_token %}
+                                <input type="hidden" name="toy_id" value="{{ toy_id }}">
+                                <button class="btn2" type="submit"><p>Подтвердить</p></button>
+                            </form>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <button class="btn2" onclick="window.close()">Отказаться</button>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+		</tr>
+	</table>
+{{ action_title }}
+{% endblock %}
+{% block footer %}
+{{ block.super }}
+{% endblock %}
+

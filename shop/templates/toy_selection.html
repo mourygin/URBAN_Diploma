@@ -1,0 +1,76 @@
+{% extends 'struct.html' %}
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <link rel = 'stylesheet' href = '{% static "style.css" %}'>
+    <title>Отдел игрушек</title>
+</head>
+{% block pagename %}
+<h1>{{ current_user_name }}{% if current_user != 0 %}!{% endif %} {{ pn }}</h1>
+{% endblock %}
+{% block menu %}
+{{ block.super }}
+{% endblock %}
+{% block main %}
+
+
+
+<table border="0" align="center" width="1004">
+    <tr>
+<!--                  <td><form action="http://127.0.0.1:8000/toys/?toy_cat=1"><button class="btn"><img src="{% static 'boy.png' %}" width="40" height="45" align="left"><h4>Мальчишкам...</h4></button></form></td>-->
+                  <td><a href="http://127.0.0.1:8000/toys/?toy_cat=1"><button class="btn"><img src="{% static 'boy.png' %}" width="40" height="45" align="left"><h4>Мальчишкам...</h4></button></a></td>
+                  <td><a href="http://127.0.0.1:8000/toys/?toy_cat=2"><button class="btn"><img src="{% static 'girl.png' %}" width="40" height="45" align="left"><h4>Девчонкам...</h4></button></a></td>
+                  <td><a href="http://127.0.0.1:8000/toys/?toy_cat=3"><button class="btn"><img src="{% static 'cat&dog.png' %}" width="40" height="45" align="left"><h4>Питомцам...</h4></button></a></td>
+                  <td><a href="http://127.0.0.1:8000/toys/?"><button class="btn"><img src="{% static 'All_toys+.png' %}" width="40" height="45" align="left"><h4>Все игрушки</h4></button></a></td>
+    </tr>
+</table>
+<table border="1" align="center" width="1080">
+        <tr>
+            <th>
+                <p>Артикул</p>
+            </th>
+            <th>
+                <p>Наименование</p>
+            </th>
+            <th>
+                <p>Цена</p>
+            </th>
+            <th>
+                <p>Вид</p>
+            </th>
+            <th>
+                <p>Действия</p>
+            </th>
+
+        </tr>
+        {% for toy in Toys %}
+        <tr>
+            <td>
+                <p align="center">{{ toy.articul }}</p>
+            </td>
+            <td>
+                <p align="center">{{ toy.title }}<br>({{ toy.description }})</p>
+            </td>
+            <td>
+                <p align="center">{{ toy.actual_cost }}</p>
+            </td>
+            <td>
+                <p align="center"><img src = "/static/{{ toy.picture_min }}"  width="100" height="100"/></p>
+            </td>
+            <td align="center">
+                <form action="http://127.0.0.1:8000/show_max" target="_blank">
+                   <input type="hidden" name="toy_id" value="{{ toy.id }}">
+                   <button class="btn2"><p>Посмотреть</p></button>
+                </form>
+                {% if current_user != 0 %}
+                    <br>
+                <a href="http://127.0.0.1:8000/purchase_confirm/?toy={{ toy.id }}">
+                    <button class="btn2"><p>Купить</p></button>
+                </a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
+</html>

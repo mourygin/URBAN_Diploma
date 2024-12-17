@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+{% extends 'struct.html' %}
+{% load static %}
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{ toy_pic }}</title>
+</head>
+<body>
+{% block main %}
+    <p align="center"><img src="/static/{{ toy_pic }}"/></p>
+    <p align="center"><button class="btn2" onclick="window.close()">Закрыть вкладку</button></p>
+{% endblock %}
+</body>
+</html>

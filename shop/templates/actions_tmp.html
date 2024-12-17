@@ -1,0 +1,55 @@
+{% extends 'struct.html' %}
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+	<link rel = 'stylesheet' href = '{% static "style.css" %}'>
+</head>
+{% block pagename %}
+	{{ block.super }}
+{% endblock %}
+{% block menu %}
+{{ block.super }}
+{% endblock %}
+{% block main %}
+	<table border="1" align="center" width="1080">
+        {% for action in actions_s %}
+		<tr align="center">
+            <td>
+                <table border="0" align="center" width="1080">
+                    <tr>
+                        <td width="350" rowspan="3" align="center">
+                            <img src = "/static/{{ action[0].picture_fn }}"  width="300" height="300"/>
+                        </td>
+                        <td>
+                            <h2><u>{{ action[0].title }}</u></h2>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <h3>{{ action[0].text }}</h3>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {% if action[0].first_date == action[0].last_date %}
+                            <h4><i>Акция состоится {{ action[0].first_date }}</i></h4>
+                            {% else %}
+                            <h4><i>Акция продлится с {{ action[0].first_date }} по {{ action[0].last_date }}</i></h4>
+                            {% endif %}
+                            {% if action[0].presents and current_user != 0 and active_action[1] %}
+                            <h4><i><a href="http://127.0.0.1:8000/">Получить подарок</a></i></h4>
+                            {% endif %}
+
+
+                        </td>
+                    </tr>
+                </table>
+            </td>
+		</tr>
+        {% endfor %}
+	</table>
+{% endblock %}
+{% block footer %}
+{{ block.super }}
+{% endblock %}
+

@@ -1,0 +1,46 @@
+{% extends 'struct.html' %}
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+	<link rel = 'stylesheet' href = '{% static "style.css" %}'>
+</head>
+{% block pagename %}
+	<h1>{{ current_user_name }}, поздравляем! Вот Ваш подарок!</h1>
+{% endblock %}
+{% block menu %}
+{{ block.super }}
+{% endblock %}
+{% block main %}
+	<table border="1" align="center" width="1080">
+		<tr align="center">
+            <td>
+                <table border="0" align="center" width="1080">
+                    <tr>
+                        <td width="350" rowspan="3" align="center">
+                            <img src = "/static/{{ present.picture_max }}"  width="300" height="300"/>
+                        </td>
+                        <td>
+                            <h2><u>{{ action.title }}</u></h2>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <h3>{{ present.title }}</h3>
+                            <h3>{{ present.description }}</h3>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <h4><i>Подарок будет доставлен в ближайшее время по Вашему адресу.</i></h4>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+		</tr>
+	</table>
+{{ action_title }}
+{% endblock %}
+{% block footer %}
+{{ block.super }}
+{% endblock %}
+
