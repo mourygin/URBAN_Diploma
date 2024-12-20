@@ -140,3 +140,5 @@
 
 ## Файловая структура проекта.
 
+![FileStructure](https://github.com/user-attachments/assets/bae0c834-4a88-4047-9e9c-11a23aa831c1)
+
