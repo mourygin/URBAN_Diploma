@@ -9,6 +9,7 @@ from random import randint
 current_user = 0
 current_user_name = ''
 
+
 def main_page(request):
     '''
     Актуализирует действие акций и цены с учетом временных скидок,
@@ -21,8 +22,10 @@ def main_page(request):
     # Актуализируем действие акций на текущую дату
     actions = Action.objects.all()
     for action in actions:
-        first_date = datetime.datetime.strptime(str(action.first_date), "%Y-%m-%d").date()
-        last_date = datetime.datetime.strptime(str(action.last_date), "%Y-%m-%d").date()
+        first_date = datetime.datetime.strptime(
+            str(action.first_date), "%Y-%m-%d").date()
+        last_date = datetime.datetime.strptime(
+            str(action.last_date), "%Y-%m-%d").date()
         if first_date <= datetime.date.today() and last_date >= datetime.date.today():
             action.actual = 1
         else:
@@ -39,8 +42,14 @@ def main_page(request):
     for toy in toys:
         toy.actual_cost = float(toy.cost) * float(discount)
         toy.save()
-    context = {'pn': pn, 'current_user': current_user, 'toys': toys, 'discount': discount}
+    context = {
+        'pn': pn,
+        'current_user': current_user,
+        'toys': toys,
+        'discount': discount}
     return render(request, 'main_page.html', context)
+
+
 def actions_page(request):
     '''
     Формирует контекст страницы акций и возвращает рендер ее шаблона
@@ -50,9 +59,13 @@ def actions_page(request):
     global current_user, current_user_name
     pn = 'Мы кое-что для Вас приготовили!'
     current_date = datetime.date.today()
-    actions = Action.objects.filter(published=True) & Action.objects.filter(last_date__gte = current_date).order_by('last_date')
+    actions = Action.objects.filter(
+        published=True) & Action.objects.filter(
+        last_date__gte=current_date).order_by('last_date')
     context = {'pn': pn, 'current_user': current_user, 'actions': actions}
     return render(request, 'actions.html', context)
+
+
 def present(request):
     '''
     Подготавливает данные для страницы вручения акционных подарков.
@@ -66,16 +79,23 @@ def present(request):
     global current_user, current_user_name
     action_id = request.GET.get('action')
     action = Action.objects.filter(id=action_id)
-    presents = Toy.objects.filter(toy_cat=4) & Toy.objects.filter(in_stock__gt = 0)
+    presents = Toy.objects.filter(
+        toy_cat=4) & Toy.objects.filter(
+        in_stock__gt=0)
     if len(presents) > 0:
         l = len(presents)
         p = randint(0, l - 1)
         present = presents[p]
-        context = {'present': present, 'current_user_name': current_user_name, 'action': action}
+        context = {
+            'present': present,
+            'current_user_name': current_user_name,
+            'action': action}
         return render(request, 'present.html', context)
     else:
         context = {'current_user_name': current_user_name}
         return render(request, 'no_present.html', context)
+
+
 def shop_page(request):
     '''
     Получает из текста GET-запроса категорию игрушек.
@@ -89,11 +109,16 @@ def shop_page(request):
     toy_cat = request.GET.get('toy_cat', 0)
     pn = 'Выбери игрушку по своему вкусу!'
     if toy_cat == 0:
-        Toys = Toy.objects.filter(in_stock__gt = 0).exclude(toy_cat__gt=2)
+        Toys = Toy.objects.filter(in_stock__gt=0).exclude(toy_cat__gt=2)
     else:
-        Toys = Toy.objects.filter(toy_cat=toy_cat) & Toy.objects.filter(in_stock__gt = 0)
-    context = {'pn':pn, 'Toys':Toys, 'current_user':current_user, 'current_user_name':current_user_name, 'toy_cat':toy_cat}
+        Toys = Toy.objects.filter(
+            toy_cat=toy_cat) & Toy.objects.filter(
+            in_stock__gt=0)
+    context = {'pn': pn, 'Toys': Toys, 'current_user': current_user,
+               'current_user_name': current_user_name, 'toy_cat': toy_cat}
     return render(request, 'toy_selection.html', context)
+
+
 def purchase_confirm(request):
     '''
     Подготавливает данные для страницы подтверждения покупки.
@@ -111,11 +136,26 @@ def purchase_confirm(request):
     toy_cost = toy[0].actual_cost
     user = Buyer.objects.filter(id=current_user)
     balance = user[0].balance
-    good_words = ["хороший", "замечательный", "неплохой", "стильный", "прекрасный", "отличный"]
-    word_nr = randint(0, len(good_words)-1)
+    good_words = [
+        "хороший",
+        "замечательный",
+        "неплохой",
+        "стильный",
+        "прекрасный",
+        "отличный"]
+    word_nr = randint(0, len(good_words) - 1)
     good_word = good_words[word_nr]
-    context = {'current_user_name': current_user_name, 'balance': balance, 'toy_id': toy_id, 'toy_title': toy_title, 'toy_cost': toy_cost, 'toy_pic_fn': toy_pic_fn, 'good_word': good_word}
+    context = {
+        'current_user_name': current_user_name,
+        'balance': balance,
+        'toy_id': toy_id,
+        'toy_title': toy_title,
+        'toy_cost': toy_cost,
+        'toy_pic_fn': toy_pic_fn,
+        'good_word': good_word}
     return render(request, 'purchase_confirm.html', context)
+
+
 def basket_page(request):
     '''
     Подготавливает данные для страницы "Корзина"
@@ -125,10 +165,16 @@ def basket_page(request):
     :return:
     '''
     global current_user, current_user_name
-    pn ='Корзина'
+    pn = 'Корзина'
     toys = Basket.objects.filter(buyer_id=current_user)
-    context = {'pn': pn, 'current_user':current_user, 'current_user_name':current_user_name, 'toys':toys}
-    return render(request,'basket.html',context)
+    context = {
+        'pn': pn,
+        'current_user': current_user,
+        'current_user_name': current_user_name,
+        'toys': toys}
+    return render(request, 'basket.html', context)
+
+
 def logout_page(request):
     '''
     Функция выхода из системы.
@@ -143,6 +189,8 @@ def logout_page(request):
     pn = 'Добро пожаловать в наш игрушечный магазин игрушек!'
     context = {'pn': pn, 'current_user': current_user}
     return render(request, 'main_page.html', context)
+
+
 def login_page(request):
     '''
     Функция входа в систему, получив GET-запрос, берет информационную структуру формы из класса LoginForm и возвращает
@@ -158,7 +206,7 @@ def login_page(request):
     :return:
     '''
     global current_user, current_user_name
-    pn ='Мы рады Вас видеть!'
+    pn = 'Мы рады Вас видеть!'
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -175,8 +223,12 @@ def login_page(request):
                         current_user = buyer.id
                         current_user_name = buyer.name
                         pn = 'Выбери игрушку по своему вкусу!'
-                        Toys = Toy.objects.filter(in_stock__gt = 0)
-                        context = {'pn': pn, 'Toys': Toys, 'current_user': current_user, 'current_user_name':current_user_name}
+                        Toys = Toy.objects.filter(in_stock__gt=0)
+                        context = {
+                            'pn': pn,
+                            'Toys': Toys,
+                            'current_user': current_user,
+                            'current_user_name': current_user_name}
                         return render(request, 'toy_selection.html', context)
                     else:
                         response = 'Ошибка логина или пароля!'
@@ -187,8 +239,10 @@ def login_page(request):
                 return HttpResponse(response)
     else:
         form = LoginForm()
-    context = {'pn': pn, 'form':form, 'current_user':current_user}
+    context = {'pn': pn, 'form': form, 'current_user': current_user}
     return render(request, 'login_page.html', context)
+
+
 def show_max(request):
     '''
     Функция подготовки данных для отображения страницы детального просмотра товара (как правило анимированного)
@@ -202,7 +256,11 @@ def show_max(request):
     toys = Toy.objects.filter(id=toy_id)
     toy = toys[0]
     pic_fn = str(toy.picture_max)
-    return render(request, 'show_max.html', {'pn':'Можно рассмотреть повнимательнее...', 'toy_pic': pic_fn})
+    return render(
+        request, 'show_max.html', {
+            'pn': 'Можно рассмотреть повнимательнее...', 'toy_pic': pic_fn})
+
+
 def registration(request):
     '''
     Функция регистрации нового пользователя, получив GET-запрос, берет информационную структуру формы из класса
@@ -246,7 +304,11 @@ def registration(request):
                         return HttpResponse(response)
                 pwd_enc = password.encode()
                 pwd_hash = hashlib.md5(pwd_enc)
-                Buyer.objects.create(name=username,balance=100,age=age,psw=pwd_hash.hexdigest())
+                Buyer.objects.create(
+                    name=username,
+                    balance=100,
+                    age=age,
+                    psw=pwd_hash.hexdigest())
                 new_buyer = Buyer.objects.get(name=username)
                 current_user = new_buyer.id
                 current_user_name = new_buyer.name
@@ -255,8 +317,9 @@ def registration(request):
                 return HttpResponse(response)
     else:
         form = DjangoRegForm()
-    contest = {'pn': pn, 'form':form, 'current_user':current_user}
+    contest = {'pn': pn, 'form': form, 'current_user': current_user}
     return render(request, 'django_reg.html', contest)
+
 
 def buy_toy(request):
     '''
@@ -271,17 +334,24 @@ def buy_toy(request):
     '''
     global current_user, current_user_name
     toy_id = request.POST.get('toy_id')
-        # Логика обработки покупки игрушки
+    # Логика обработки покупки игрушки
     toy = (Toy.objects.filter(id=toy_id))[0]
     buyer = Buyer.objects.filter(id=current_user)[0]
-    Basket.objects.create(buyer_id=buyer, toy_id=toy, toy_name=Toy.objects.get(id=toy_id).title, toy_descr=Toy.objects.get(id=toy_id).description)
+    Basket.objects.create(
+        buyer_id=buyer, toy_id=toy, toy_name=Toy.objects.get(
+            id=toy_id).title, toy_descr=Toy.objects.get(
+            id=toy_id).description)
     toy.in_stock = toy.in_stock - 1
     toy.save()
-    buyers = Buyer.objects.filter(id = current_user)
+    buyers = Buyer.objects.filter(id=current_user)
     buyer = buyers[0]
     buyer.balance -= toy.actual_cost
     buyer.save()
     pn = 'Корзина'
     toys = Basket.objects.filter(buyer_id=current_user)
-    context = {'pn': pn, 'current_user': current_user, 'current_user_name': current_user_name, 'toys': toys}
+    context = {
+        'pn': pn,
+        'current_user': current_user,
+        'current_user_name': current_user_name,
+        'toys': toys}
     return render(request, 'basket.html', context)
